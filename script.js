@@ -1,7 +1,6 @@
 // Powered by Quotable
 // https://github.com/lukePeavey/quotable
 
-document.addEventListener("DOMContentLoaded", () => {
   // DOM elements
   const button = document.querySelector("button");
   const quote = document.querySelector("blockquote p");
@@ -26,4 +25,3 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // call updateQuote once when page loads
   updateQuote();
-});
