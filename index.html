@@ -5,6 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400&family=Roboto+Mono:wght@300;400&family=Roboto:wght@300;400&display=swap"
+        rel="stylesheet">
     <style>
         body {
             min-height: 100vh;
@@ -22,50 +25,152 @@
         }
 
         .card-body {
-            padding: 40px;
+            padding: 20px;
+        }
+
+        .blockquote p {
+            font-size: 1.5rem;
+        }
+
+        .mono {
+            font-family: 'Roboto Mono', monospace;
+        }
+
+        .sans {
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .serif {
+            font-family: 'Noto Serif JP', serif;
+        }
+
+        .settings {
+            text-align: center;
+            border-color: 1px;
+            background-color: #eee;
+            position: fixed;
+            right: 0;
+            bottom: 0;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .settings:hover {
+            opacity: 1;
+        }
+
+        .settings button {
+            border: none;
+            background: none;
+            text-transform: capitalize;
+            cursor: pointer;
+        }
+
+        .settings .modes button {
+            font-size: 0.8rem;
+        }
+
+        .settings .fonts button {
+            font-size: 1.2rem;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .settings small {
+            font-size: 0.8rem;
+            float: left;
+        }
+
+
+        .light {
+            color: rgba(0, 0, 0, 0.9);
+            background-color: #ffffff !important;
+        }
+
+        .dark {
+            color: rgba(255, 255, 255, 0.9);
+            background-color: rgb(47, 52, 55) !important;
         }
     </style>
 </head>
 
-<body>
-    <div class="card">
+<body class="light">
+    <div class="settings">
+        <div class="modes sans">
+            <button class="light">Light</button>
+            <button class="dark">Dark</button>
+        </div>
+        <div class="fonts">
+            <button class="mono">
+                ag <br>
+                <small class="sans">Mono</small>
+            </button>
+            <button class="serif">
+                ag <br>
+                <small class="sans">Serif</small>
+            </button>
+            <button class="sans">
+                ag <br>
+                <small class="sans">Default</small>
+            </button>
+        </div>
+    </div>
+    <div class="quote mono">
         <div class="card-body">
-            <blockquote class="blockquote mb-0">
+            <blockquote class="blockquote">
                 <p>loading...</p>
-                <footer class="blockquote-footer">
-                    <cite title="Source Title"></cite>
-                </footer>
+                — <cite title="Source Title"></cite>
             </blockquote>
         </div>
     </div>
     <script>
-        // Powered by Quotable
-        // https://github.com/lukePeavey/quotable
 
         document.addEventListener("DOMContentLoaded", () => {
-            // DOM elements
-            const button = document.querySelector("button");
-            const quote = document.querySelector("blockquote p");
+            const body = document.querySelector("body")
+            const quote = document.querySelector(".quote")
+            const quote_text = document.querySelector("blockquote p");
             const cite = document.querySelector("blockquote cite");
+            const fonts_buttons = document.querySelectorAll(".settings .fonts button");
+            const modes_buttons = document.querySelectorAll(".settings .modes button");
 
             async function updateQuote() {
-                // Fetch a random quote from the Quotable API
                 const response = await fetch("https://api.quotable.io/random");
                 const data = await response.json();
                 if (response.ok) {
-                    // Update DOM elements
-                    quote.textContent = data.content;
+                    quote_text.textContent = data.content;
                     cite.textContent = data.author;
                 } else {
-                    quote.textContent = "An error occured";
+                    quote_text.textContent = "An error occured";
                     console.log(data);
                 }
             }
 
-            // Attach an event listener to the `button`
-            // button.addEventListener("click", updateQuote);
+            function updateStyle() {
+                const font = localStorage.getItem('font') || 'sans';
+                changeFont(font);
 
-            // call updateQuote once when page loads
+                const mode = localStorage.getItem('mode') || 'light';
+                changeMode(mode);
+            }
+
+            function changeFont(value) {
+                quote.className = value;
+                localStorage.setItem('font', value);
+            }
+            function changeMode(value) {
+                body.className = value;
+                localStorage.setItem('mode', value);
+            }
+
+            fonts_buttons.forEach(function (elem) {
+                elem.addEventListener("click", () => changeFont(elem.classList.value));
+            });
+
+            modes_buttons.forEach(function (elem) {
+                elem.addEventListener("click", () => changeMode(elem.classList.value));
+            });
+
+            updateStyle();
             updateQuote();
         });
 
