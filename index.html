@@ -28,9 +28,14 @@
             padding: 20px;
         }
 
-        .blockquote p {
+        .quote {
             font-size: 1.5rem;
         }
+
+        cite {
+            font-size: 80%;
+        }
+
 
         .mono {
             font-family: 'Roboto Mono', monospace;
@@ -51,7 +56,7 @@
             position: fixed;
             right: 0;
             bottom: 0;
-            opacity: 0;
+            opacity: 0.9;
             transition: opacity 0.2s;
         }
 
@@ -64,10 +69,19 @@
             background: none;
             text-transform: capitalize;
             cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .settings button:hover {
+            opacity: 0.6;
         }
 
         .settings .modes button {
             font-size: 0.8rem;
+        }
+
+        .settings .size button {
+            font-size: 1rem;
         }
 
         .settings .fonts button {
@@ -96,6 +110,10 @@
 
 <body class="light">
     <div class="settings">
+        <div class="size sans">
+            <button class="plus">A+</button>
+            <button class="minus">A-</button>
+        </div>
         <div class="modes sans">
             <button class="light">Light</button>
             <button class="dark">Dark</button>
@@ -126,12 +144,14 @@
     <script>
 
         document.addEventListener("DOMContentLoaded", () => {
-            const body = document.querySelector("body")
-            const quote = document.querySelector(".quote")
+            let size = 1.5;
+            const body = document.querySelector("body");
+            const quote = document.querySelector(".quote");
             const quote_text = document.querySelector("blockquote p");
             const cite = document.querySelector("blockquote cite");
             const fonts_buttons = document.querySelectorAll(".settings .fonts button");
             const modes_buttons = document.querySelectorAll(".settings .modes button");
+            const size_buttons = document.querySelectorAll(".settings .size button");
 
             async function updateQuote() {
                 const response = await fetch("https://api.quotable.io/random");
@@ -151,6 +171,9 @@
 
                 const mode = localStorage.getItem('mode') || 'light';
                 changeMode(mode);
+
+                size = localStorage.getItem('size') || 1.5;
+                setSize(size);
             }
 
             function changeFont(value) {
@@ -161,6 +184,21 @@
                 body.className = value;
                 localStorage.setItem('mode', value);
             }
+
+            function changeSize(value) {
+                size = value == "plus" ? size + 0.1 : size - 0.1;
+                setSize(size);
+            }
+
+            function setSize(value) {
+                quote.style.fontSize = parseFloat(value).toFixed(1) + 'rem';
+                localStorage.setItem('size', value);
+            }
+
+
+            size_buttons.forEach(function (elem) {
+                elem.addEventListener("click", () => changeSize(elem.classList.value));
+            });
 
             fonts_buttons.forEach(function (elem) {
                 elem.addEventListener("click", () => changeFont(elem.classList.value));
