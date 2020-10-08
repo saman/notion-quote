@@ -22,7 +22,7 @@ The JSON file must be in this format:
 ]
 ```
 
-You have to add the url of your JSON file with parameter f into query parameters.
+You have to add the url of your JSON file with parameter `f` into query parameters.
 If you're using a gist, make sure you use the raw version.
 
 Here is an example for [my gist](https://gist.github.com/saman/a4326228c01f7fe15de6707655352300):
