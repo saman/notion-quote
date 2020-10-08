@@ -142,7 +142,6 @@
         </div>
     </div>
     <script>
-
         document.addEventListener("DOMContentLoaded", () => {
             let size = 1.5;
             const body = document.querySelector("body");
@@ -164,6 +163,18 @@
                     console.log(data);
                 }
             }
+            async function updateQuoteCustom(f) {
+                const response = await fetch(f);
+                const data = await response.json();
+                if (response.ok && data.length > 0) {
+                    random_quote = data[Math.floor(Math.random() * data.length - 1) + 1];
+                    quote_text.textContent = random_quote.content;
+                    cite.textContent = random_quote.author;
+                } else {
+                    quote_text.textContent = "An error occured";
+                    console.log(data);
+                }
+            }
 
             function updateStyle() {
                 const font = localStorage.getItem('font') || 'sans';
@@ -180,6 +191,7 @@
                 quote.className = value;
                 localStorage.setItem('font', value);
             }
+
             function changeMode(value) {
                 body.className = value;
                 localStorage.setItem('mode', value);
@@ -209,9 +221,15 @@
             });
 
             updateStyle();
-            updateQuote();
-        });
 
+            var url = new URL(window.location);
+            var f = url.searchParams.get("f");
+            if (f == null) {
+                updateQuote();
+            } else {
+                updateQuoteCustom(f);
+            }
+        });
     </script>
 </body>
 
