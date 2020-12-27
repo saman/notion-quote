@@ -8,7 +8,7 @@ On the right bottom corner, you can change settings. They are developed in a way
 You can add a different source for random quotes. This source must be a JSON file hosted somewhere.
 As an example you can use [Github Gist](https://gist.github.com/).
 
-The JSON file must be in this format:
+The valid JSON file must be in this format:
 ```json
 [
   {
