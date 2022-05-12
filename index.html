@@ -193,8 +193,8 @@
                 const font = localStorage.getItem('font') || 'sans';
                 changeFont(font);
 
-                const mode = localStorage.getItem('mode') || 'light';
-                changeMode(mode);
+                const mode = localStorage.getItem('mode');
+                if (mode) changeMode(mode);
 
                 size = localStorage.getItem('size') || 1.5;
                 setSize(size);
@@ -241,6 +241,15 @@
                 updateQuote();
             } else {
                 updateQuoteCustom(f);
+            }
+
+            const prefersDark = window.matchMedia("(prefers-color-scheme: dark)");
+            handleColorSchemeChange(prefersDark);
+            prefersDark.addEventListener('change', handleColorSchemeChange);
+            function handleColorSchemeChange(mql) {
+                if (!localStorage.getItem('mode')) {
+                    body.className = mql.matches ? 'dark' : 'light';
+                }
             }
         });
     </script>
