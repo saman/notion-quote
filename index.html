@@ -116,6 +116,11 @@
 
 <body class="light">
     <div class="settings">
+        <div class="slide sans">
+            <button id="next">
+                Shuffle
+            </button>
+        </div>
         <div class="size sans">
             <button class="plus">A+</button>
             <button class="minus">A-</button>
@@ -152,6 +157,7 @@
             let size = 1.5;
             const body = document.querySelector("body");
             const quote = document.querySelector(".quote");
+            const next = document.getElementById("next");
             const quote_text = document.querySelector("blockquote p");
             const cite = document.querySelector("blockquote cite");
             const fonts_buttons = document.querySelectorAll(".settings .fonts button");
@@ -172,7 +178,7 @@
                     }
                 } catch (error) {
                     quote_text.textContent = "Oops! There is a problem with the quotes server.";
-                    console.log(data);
+                    console.log(error);
                 }
 
             }
@@ -232,6 +238,14 @@
             modes_buttons.forEach(function (elem) {
                 elem.addEventListener("click", () => changeMode(elem.classList.value));
             });
+            next.onclick = (e) => {
+                console.log(e)
+                if (f == null) {
+                    updateQuote();
+                } else {
+                    updateQuoteCustom(f);
+                }
+            }
 
             updateStyle();
 
