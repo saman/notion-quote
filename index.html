@@ -5,9 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Notion Random Quote</title>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400&family=Roboto+Mono:wght@300;400&family=Roboto:wght@300;400&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400&family=Roboto+Mono:wght@300;400&family=Roboto:wght@300;400&display=swap" rel="stylesheet">
     <style>
         body {
             min-height: 100vh;
@@ -18,43 +16,42 @@
             margin: 0;
             padding: 0;
         }
-
+        
         .card {
             width: 80%;
             max-width: 700px;
         }
-
+        
         .card-body {
             padding: 20px;
         }
-
+        
         .quote {
             font-size: 1.5rem;
         }
-
+        
         .content {
             font-weight: 200;
         }
-
+        
         cite {
             font-size: 80%;
             font-weight: 500;
             font-style: normal;
         }
-
-
+        
         .mono {
             font-family: 'Roboto Mono', monospace;
         }
-
+        
         .sans {
             font-family: 'Roboto', sans-serif;
         }
-
+        
         .serif {
             font-family: 'Noto Serif JP', serif;
         }
-
+        
         .settings {
             text-align: center;
             border-color: 1px;
@@ -65,11 +62,11 @@
             opacity: 0;
             transition: opacity 0.2s;
         }
-
+        
         .settings:hover {
             opacity: 1;
         }
-
+        
         .settings button {
             border: none;
             background: none;
@@ -77,45 +74,65 @@
             cursor: pointer;
             transition: opacity 0.2s;
         }
-
+        
         .settings button:hover {
             opacity: 0.6;
         }
-
+        
         .settings .modes button {
             font-size: 0.8rem;
         }
-
+        
+        .settings .action {
+            padding: 0.4rem;
+        }
+        
         .settings .size button {
             font-size: 1rem;
         }
-
+        
         .settings .fonts button {
             font-size: 1.2rem;
             display: inline-block;
             text-align: center;
         }
-
+        
         .settings small {
             font-size: 0.8rem;
             float: left;
         }
-
-
+        
         .light {
             color: rgba(0, 0, 0, 0.9);
             background-color: #ffffff !important;
         }
-
+        
         .dark {
             color: rgba(255, 255, 255, 0.9);
             background-color: rgb(25, 25, 25) !important;
+        }
+        
+        .dash {
+            opacity: 0.2;
+        }
+        
+        hr {
+            border: none;
+            border-bottom: 1px solid gray;
+            opacity: 0.2;
+            padding: 0;
+            margin: 0;
+            margin-bottom: 0.4rem;
         }
     </style>
 </head>
 
 <body class="light">
     <div class="settings">
+        <div class="action sans">
+            <button class="shuffle">Shuffle</button>
+        </div>
+        <hr>
         <div class="size sans">
             <button class="plus">A+</button>
             <button class="minus">A-</button>
@@ -143,7 +160,7 @@
         <div class="card-body">
             <blockquote class="blockquote">
                 <p class="content"></p>
-                <cite title="Source Title"></cite>
+                <span class="dash">&horbar;</span> <cite title="Source Title"></cite>
             </blockquote>
         </div>
     </div>
@@ -152,11 +169,13 @@
             let size = 1.5;
             const body = document.querySelector("body");
             const quote = document.querySelector(".quote");
+            const shuffle = document.querySelector(".shuffle");
             const quote_text = document.querySelector("blockquote p");
             const cite = document.querySelector("blockquote cite");
             const fonts_buttons = document.querySelectorAll(".settings .fonts button");
             const modes_buttons = document.querySelectorAll(".settings .modes button");
             const size_buttons = document.querySelectorAll(".settings .size button");
+            const prefersDark = window.matchMedia("(prefers-color-scheme: dark)");
 
             async function updateQuote() {
                 try {
@@ -172,7 +191,7 @@
                     }
                 } catch (error) {
                     quote_text.textContent = "Oops! There is a problem with the quotes server.";
-                    console.log(data);
+                    console.log(error);
                 }
 
             }
@@ -196,7 +215,7 @@
                 const mode = localStorage.getItem('mode');
                 if (mode) changeMode(mode);
 
-                size = localStorage.getItem('size') || 1.5;
+                size = parseFloat(localStorage.getItem('size'), 2) || 1.5;
                 setSize(size);
             }
 
@@ -212,45 +231,50 @@
 
             function changeSize(value) {
                 size = value == "plus" ? size + 0.1 : size - 0.1;
+                size = parseFloat(size.toFixed(2))
                 setSize(size);
             }
 
             function setSize(value) {
-                quote.style.fontSize = parseFloat(value).toFixed(1) + 'rem';
+                quote.style.fontSize = value + 'rem';
                 localStorage.setItem('size', value);
             }
 
+            function loadQuote() {
+                var url = new URL(window.location);
+                var fileUrl = url.searchParams.get("f");
+                if (fileUrl == null) {
+                    updateQuote();
+                } else {
+                    updateQuoteCustom(f);
+                }
+            }
 
-            size_buttons.forEach(function (elem) {
+            function handleColorSchemeChange(mediaQueryList) {
+                if (!localStorage.getItem('mode')) {
+                    body.className = mediaQueryList.matches ? 'dark' : 'light';
+                }
+            }
+
+            size_buttons.forEach(function(elem) {
                 elem.addEventListener("click", () => changeSize(elem.classList.value));
             });
 
-            fonts_buttons.forEach(function (elem) {
+            fonts_buttons.forEach(function(elem) {
                 elem.addEventListener("click", () => changeFont(elem.classList.value));
             });
 
-            modes_buttons.forEach(function (elem) {
+            modes_buttons.forEach(function(elem) {
                 elem.addEventListener("click", () => changeMode(elem.classList.value));
             });
 
-            updateStyle();
-
-            var url = new URL(window.location);
-            var f = url.searchParams.get("f");
-            if (f == null) {
-                updateQuote();
-            } else {
-                updateQuoteCustom(f);
-            }
-
-            const prefersDark = window.matchMedia("(prefers-color-scheme: dark)");
-            handleColorSchemeChange(prefersDark);
+            shuffle.addEventListener("click", () => loadQuote());
             prefersDark.addEventListener('change', handleColorSchemeChange);
-            function handleColorSchemeChange(mql) {
-                if (!localStorage.getItem('mode')) {
-                    body.className = mql.matches ? 'dark' : 'light';
-                }
-            }
+
+            updateStyle();
+            loadQuote();
+            handleColorSchemeChange(prefersDark);
+
         });
     </script>
 </body>
