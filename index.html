@@ -215,7 +215,7 @@
                 const mode = localStorage.getItem('mode');
                 if (mode) changeMode(mode);
 
-                size = localStorage.getItem('size') || 1.5;
+                size = parseFloat(localStorage.getItem('size'), 2) || 1.5;
                 setSize(size);
             }
 
