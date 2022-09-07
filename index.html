@@ -5,9 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Notion Random Quote</title>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400&family=Roboto+Mono:wght@300;400&family=Roboto:wght@300;400&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400&family=Roboto+Mono:wght@300;400&family=Roboto:wght@300;400&display=swap" rel="stylesheet">
     <style>
         body {
             min-height: 100vh;
@@ -18,43 +16,42 @@
             margin: 0;
             padding: 0;
         }
-
+        
         .card {
             width: 80%;
             max-width: 700px;
         }
-
+        
         .card-body {
             padding: 20px;
         }
-
+        
         .quote {
             font-size: 1.5rem;
         }
-
+        
         .content {
             font-weight: 200;
         }
-
+        
         cite {
             font-size: 80%;
             font-weight: 500;
             font-style: normal;
         }
-
-
+        
         .mono {
             font-family: 'Roboto Mono', monospace;
         }
-
+        
         .sans {
             font-family: 'Roboto', sans-serif;
         }
-
+        
         .serif {
             font-family: 'Noto Serif JP', serif;
         }
-
+        
         .settings {
             text-align: center;
             border-color: 1px;
@@ -65,11 +62,11 @@
             opacity: 0;
             transition: opacity 0.2s;
         }
-
+        
         .settings:hover {
             opacity: 1;
         }
-
+        
         .settings button {
             border: none;
             background: none;
@@ -77,36 +74,35 @@
             cursor: pointer;
             transition: opacity 0.2s;
         }
-
+        
         .settings button:hover {
             opacity: 0.6;
         }
-
+        
         .settings .modes button {
             font-size: 0.8rem;
         }
-
+        
         .settings .size button {
             font-size: 1rem;
         }
-
+        
         .settings .fonts button {
             font-size: 1.2rem;
             display: inline-block;
             text-align: center;
         }
-
+        
         .settings small {
             font-size: 0.8rem;
             float: left;
         }
-
-
+        
         .light {
             color: rgba(0, 0, 0, 0.9);
             background-color: #ffffff !important;
         }
-
+        
         .dark {
             color: rgba(255, 255, 255, 0.9);
             background-color: rgb(25, 25, 25) !important;
@@ -227,15 +223,15 @@
             }
 
 
-            size_buttons.forEach(function (elem) {
+            size_buttons.forEach(function(elem) {
                 elem.addEventListener("click", () => changeSize(elem.classList.value));
             });
 
-            fonts_buttons.forEach(function (elem) {
+            fonts_buttons.forEach(function(elem) {
                 elem.addEventListener("click", () => changeFont(elem.classList.value));
             });
 
-            modes_buttons.forEach(function (elem) {
+            modes_buttons.forEach(function(elem) {
                 elem.addEventListener("click", () => changeMode(elem.classList.value));
             });
             next.onclick = (e) => {
@@ -260,6 +256,7 @@
             const prefersDark = window.matchMedia("(prefers-color-scheme: dark)");
             handleColorSchemeChange(prefersDark);
             prefersDark.addEventListener('change', handleColorSchemeChange);
+
             function handleColorSchemeChange(mql) {
                 if (!localStorage.getItem('mode')) {
                     body.className = mql.matches ? 'dark' : 'light';
