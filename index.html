@@ -118,7 +118,7 @@
 <body class="light">
     <div class="settings">
         <div class="slide sans">
-            <button id="next">
+            <button id="shuffle">
                 Shuffle
             </button>
         </div>
@@ -158,12 +158,13 @@
             let size = 1.5;
             const body = document.querySelector("body");
             const quote = document.querySelector(".quote");
-            const next = document.getElementById("next");
+            const shuffle = document.getElementById("shuffle");
             const quote_text = document.querySelector("blockquote p");
             const cite = document.querySelector("blockquote cite");
             const fonts_buttons = document.querySelectorAll(".settings .fonts button");
             const modes_buttons = document.querySelectorAll(".settings .modes button");
             const size_buttons = document.querySelectorAll(".settings .size button");
+            const prefersDark = window.matchMedia("(prefers-color-scheme: dark)");
 
             async function updateQuote() {
                 try {
@@ -219,14 +220,30 @@
 
             function changeSize(value) {
                 size = value == "plus" ? size + 0.1 : size - 0.1;
+                size = parseFloat(size.toFixed(2))
                 setSize(size);
             }
 
             function setSize(value) {
-                quote.style.fontSize = parseFloat(value).toFixed(1) + 'rem';
+                quote.style.fontSize = value + 'rem';
                 localStorage.setItem('size', value);
             }
 
+            function loadQuote() {
+                var url = new URL(window.location);
+                var fileUrl = url.searchParams.get("f");
+                if (fileUrl == null) {
+                    updateQuote();
+                } else {
+                    updateQuoteCustom(f);
+                }
+            }
+
+            function handleColorSchemeChange(mediaQueryList) {
+                if (!localStorage.getItem('mode')) {
+                    body.className = mediaQueryList.matches ? 'dark' : 'light';
+                }
+            }
 
             size_buttons.forEach(function(elem) {
                 elem.addEventListener("click", () => changeSize(elem.classList.value));
@@ -239,34 +256,14 @@
             modes_buttons.forEach(function(elem) {
                 elem.addEventListener("click", () => changeMode(elem.classList.value));
             });
-            next.onclick = (e) => {
-                console.log(e)
-                if (f == null) {
-                    updateQuote();
-                } else {
-                    updateQuoteCustom(f);
-                }
-            }
 
-            updateStyle();
-
-            var url = new URL(window.location);
-            var f = url.searchParams.get("f");
-            if (f == null) {
-                updateQuote();
-            } else {
-                updateQuoteCustom(f);
-            }
-
-            const prefersDark = window.matchMedia("(prefers-color-scheme: dark)");
-            handleColorSchemeChange(prefersDark);
+            shuffle.addEventListener("click", () => loadQuote());
             prefersDark.addEventListener('change', handleColorSchemeChange);
 
-            function handleColorSchemeChange(mql) {
-                if (!localStorage.getItem('mode')) {
-                    body.className = mql.matches ? 'dark' : 'light';
-                }
-            }
+            updateStyle();
+            loadQuote();
+            handleColorSchemeChange(prefersDark);
+
         });
     </script>
 </body>
