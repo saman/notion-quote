@@ -83,6 +83,10 @@
             font-size: 0.8rem;
         }
         
+        .settings .action {
+            padding: 0.4rem;
+        }
+        
         .settings .size button {
             font-size: 1rem;
         }
@@ -110,18 +114,25 @@
         
         .dash {
             opacity: 0.2;
-            line-height: 0.8rem;
+        }
+        
+        hr {
+            border: none;
+            border-bottom: 1px solid gray;
+            opacity: 0.2;
+            padding: 0;
+            margin: 0;
+            margin-bottom: 0.4rem;
         }
     </style>
 </head>
 
 <body class="light">
     <div class="settings">
-        <div class="slide sans">
-            <button id="shuffle">
-                Shuffle
-            </button>
+        <div class="action sans">
+            <button class="shuffle">Shuffle</button>
         </div>
+        <hr>
         <div class="size sans">
             <button class="plus">A+</button>
             <button class="minus">A-</button>
@@ -158,7 +169,7 @@
             let size = 1.5;
             const body = document.querySelector("body");
             const quote = document.querySelector(".quote");
-            const shuffle = document.getElementById("shuffle");
+            const shuffle = document.querySelector(".shuffle");
             const quote_text = document.querySelector("blockquote p");
             const cite = document.querySelector("blockquote cite");
             const fonts_buttons = document.querySelectorAll(".settings .fonts button");
